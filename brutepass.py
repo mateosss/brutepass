@@ -141,7 +141,7 @@ def write():
 def getHelp():
     help = """
     Usage Example:
-    python generador.py -t 3600 -d -s 100 -o pass.txt -w tag1 tag2 tag3 tag4
+    python brutepass.py -t 3600 -d -s 100 -o pass.txt -w tag1 tag2 tag3 tag4
 
     Commands:
     -h :\tShow this help.
