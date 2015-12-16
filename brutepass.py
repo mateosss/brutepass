@@ -1,6 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
+
+#ANSI characters
+HEADER = '\033[95m'
+OKBLUE = '\033[94m'
+OKGREEN = '\033[92m'
+WARNING = '\033[93m'
+FAIL = '\033[91m'
+ENDC = '\033[0m'
+BOLD = '\033[1m'
+UNDERLINE = '\033[4m'
+
 args = sys.argv
 defaultTags = ["123","1234","admin","root","user",""]
 options = ["-h","-t","-s","-w","-o","-d","-i"]
@@ -62,24 +73,25 @@ def join(words):
 def split(words):
     res = []
     for i in words:
-        if not i[0].lower() in words:
-            res.append(i[0].lower())#add first letter word
-        if i.isdigit():
-            if len(i) >= 2:
-                res.append(i[-2:])#added last two digits
-            if len(i)%2 == 0:
-                res.append(i[0:int(len(i)/2)])#added two halfs of the digit
-                res.append(i[int(len(i)/2):])
-        if len(i) < 6:
-            res.append(i[::-1])
-        if i.isalpha() and len(i) >= 5:
-            vocals = ["a","A","e","E","i","I","o","O","u","U"]
-            wordWOVocals = ""
-            for j in i:
-                if not j in vocals:
-                    wordWOVocals += j
-            if wordWOVocals != "":
-                res.append(wordWOVocals)#added word without vocals
+        if len(i) >= 1:
+            if not i[0].lower() in words:
+                res.append(i[0].lower())#add first letter word
+            if i.isdigit():
+                if len(i) >= 2:
+                    res.append(i[-2:])#added last two digits
+                if len(i)%2 == 0:
+                    res.append(i[0:int(len(i)/2)])#added two halfs of the digit
+                    res.append(i[int(len(i)/2):])
+            if len(i) < 6:
+                res.append(i[::-1])
+            if i.isalpha() and len(i) >= 5:
+                vocals = ["a","A","e","E","i","I","o","O","u","U"]
+                wordWOVocals = ""
+                for j in i:
+                    if not j in vocals:
+                        wordWOVocals += j
+                if wordWOVocals != "":
+                    res.append(wordWOVocals)#added word without vocals
     return res
 
 
@@ -185,7 +197,9 @@ if len(args) > 1:
     print("size: " + str(size))
     print("output: " + str(output))
     print("default: " + str(default))
-    print("words: " + str(tags))
+    print("words: ",end="")
+    print(", ".join(str(i) for i in tags))
+
     run()
 else:
     #TODO Make a terminal menu
