@@ -22,3 +22,5 @@ Trying to figuring out how someone tries to determine a password of another pers
 - Make pausable and resumable password generation
 - Make multithreaded, multicore, cluster ready, password generation
 - Investigate to add more combination types (make polls, and test with people the script)
+- Insert one word in the middle of other [perro, pato] = pepatorro, paperroto
+- Change vocals to numbers Microfono = M1cr0f0n0
