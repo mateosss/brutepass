@@ -1,35 +1,31 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys
 
-#ANSI characters
-HEADER = '\033[95m'
-OKBLUE = '\033[94m'
-OKGREEN = '\033[92m'
-WARNING = '\033[93m'
-FAIL = '\033[91m'
-ENDC = '\033[0m'
-BOLD = '\033[1m'
-UNDERLINE = '\033[4m'
+from __future__ import print_function
+
+import sys
+import time
+
+itime = time.time()
 
 args = sys.argv
 defaultTags = ["123","1234","admin","root","user",""]
 options = ["-h","-t","-s","-w","-o","-d","-i"]
 
 help = False
-time = 0
+maxtime = 0
 size = 0
-#TODO minChars = 1#minimum amount of characters
-#TODO isStrong = False#If the passwords must be strong (with symbols, uppercase, lowercase and numbers)
-#TODO types = ["basic", "2tags", "3tags"]#Level of agressivity
-#TODO has = ["a", "66"]#Strings that the password have
+# TODO minChars = 1 # minimum amount of characters
+# TODO isStrong = False # If the passwords must be strong (with symbols, uppercase, lowercase and numbers)
+# TODO types = ["basic", "2tags", "3tags"] # Level of agressivity, more combinations up to three or four words.
+# TODO has = ["a", "66"] # Strings that the password have
 tags = []
 output = "passwords.txt"
 default = False
 
 passList = []
 #-----COMBINATIONS-----#
-#BASICS
+# BASICS
 
 def capitalize(words):
     res = []
@@ -75,12 +71,12 @@ def split(words):
     for i in words:
         if len(i) >= 1:
             if not i[0].lower() in words:
-                res.append(i[0].lower())#add first letter word
+                res.append(i[0].lower()) # Add first letter word
             if i.isdigit():
                 if len(i) >= 2:
-                    res.append(i[-2:])#added last two digits
+                    res.append(i[-2:]) # Added last two digits
                 if len(i)%2 == 0:
-                    res.append(i[0:int(len(i)/2)])#added two halfs of the digit
+                    res.append(i[0:int(len(i)/2)]) # Added two halfs of the digit
                     res.append(i[int(len(i)/2):])
             if len(i) < 6:
                 res.append(i[::-1])
@@ -91,7 +87,7 @@ def split(words):
                     if not j in vocals:
                         wordWOVocals += j
                 if wordWOVocals != "":
-                    res.append(wordWOVocals)#added word without vocals
+                    res.append(wordWOVocals) # Added word without vocals
     return res
 
 
@@ -99,30 +95,26 @@ def split(words):
 def run():
     global tags
     global passList
+    global itime
+
+    tags = list(set(tags)) # Clean tags from duplicates
+
     res = []
 
-    splitWords = split(tags)
-    #p,c,pp,cc
-    capWords = capitalize(tags)
-    #Pipa, Cuc
-    shiftWords = shift(tags)
-    #PIPA, CUC
-    joinWords = join(tags)
-    #pipacuc,cucpipa
+    # Suppose tags = ['pipa', 'cuc']
 
-    capSplitWords = capitalize(splitWords)
-    #P,C,Pp,Cc
-    capShiftWords = capitalize(shiftWords)
-    #pIPA, cUC
-    capJoinWords = capitalize(joinWords)
-    #Pipacuc, Cucpipa
+    splitWords = split(tags) # p,c,pp,cc
+    capWords = capitalize(tags) # Pipa, Cuc
+    shiftWords = shift(tags) # PIPA, CUC
+    joinWords = join(tags) # pipacuc,cucpipa
 
-    upSplitWords = shift(splitWords)
-    #P,C,PP,CC
-    upCapWords = shift(capWords)
-    #pIPA, cUC
-    upJoinWords = shift(joinWords)
-    #PIPACUC, CUCPIPA
+    capSplitWords = capitalize(splitWords) # P,C,Pp,Cc
+    capShiftWords = capitalize(shiftWords) # pIPA, cUC
+    capJoinWords = capitalize(joinWords) # Pipacuc, Cucpipa
+
+    upSplitWords = shift(splitWords) # P,C,PP,CC
+    upCapWords = shift(capWords) # pIPA, cUC
+    upJoinWords = shift(joinWords) # PIPACUC, CUCPIPA
 
     allWords = tags + splitWords + capWords + shiftWords + capSplitWords + capShiftWords + upSplitWords + upCapWords
 
@@ -134,7 +126,7 @@ def run():
     addWords(joinAllWords)
 
     fileLength = write()
-    print ("Done... "+ str(fileLength) + " combinations generated.")
+    print("Done... {} combinations generated in {:.2f} seconds.".format(fileLength, time.time() - itime))
 
 def addWords(words):
     global passList
@@ -143,7 +135,7 @@ def addWords(words):
 def write():
     global passList
     global output
-    filteredPassList = list(set(passList))
+    filteredPassList = set(passList)
     target = open(output, 'w')
     for i in filteredPassList:
         target.write(i+"\n")
@@ -173,7 +165,7 @@ if len(args) > 1:
             print(getHelp())
             exit()
         if args[i] == "-t":
-            time = float(args[i+1])
+            maxtime = float(args[i+1])
         if args[i] == "-s":
             size = float(args[i+1])
         if args[i] == "-o":
@@ -193,7 +185,7 @@ if len(args) > 1:
         for i in defaultTags:
             tags.append(i)
     print("help: " + str(help))
-    print("time: " + str(time))
+    print("maxtime: " + str(maxtime))
     print("size: " + str(size))
     print("output: " + str(output))
     print("default: " + str(default))
@@ -202,5 +194,6 @@ if len(args) > 1:
 
     run()
 else:
-    #TODO Make a terminal menu
+    # TODO Make a terminal menu
     print(getHelp())
+
